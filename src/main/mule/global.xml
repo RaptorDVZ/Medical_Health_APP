@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd 
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="7d2bd48f-613b-4af9-8d2c-b6b3229582b0" >
+		<db:my-sql-connection host="${db.host}" port="${db.port}" user="${db.username}" password="${db.password}" database="${db.database}" />
+	</db:config>
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="37bf57b8-7a62-4b61-9748-9ec73101a9b1" basePath="/" >
+		<http:listener-connection host="0.0.0.0" port="${http.port}" />
+	</http:listener-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="73461a41-4e58-47a0-b4a9-22968d825017" file="config.yaml" />
+	<error-handler name="globalError_Handler" doc:id="ede0ae9c-affb-46ab-a668-ab31b29e8987" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="2dcc296e-bfe2-4332-8de4-4aa78dc828d6" type="ANY">
+			<set-payload value="#[error.description]" doc:name="Set Payload" doc:id="b1f14522-f8e9-4492-8d63-390f886f774e" />
+		</on-error-propagate>
+	</error-handler>
+	
+</mule>

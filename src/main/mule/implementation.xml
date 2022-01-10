@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	
+	<flow name="getFlow" doc:id="96926f48-a2ee-4539-99ee-4d03232d480c" >
+		<http:listener doc:name="Listener" doc:id="660e7867-16ee-4d29-a77e-454faa14da5f" config-ref="HTTP_Listener_config" path="/medicine" allowedMethods="GET">
+			<http:response >
+				<http:headers ><![CDATA[#[output application/java
+---
+{
+	"M_name" : payload.M_name[0]
+}]]]></http:headers>
+			</http:response>
+		</http:listener>
+		<db:select doc:name="Select" doc:id="84c0abdf-feb4-4bd2-a254-816246915a62" config-ref="Database_Config">
+			<db:sql ><![CDATA[select * from Medicines ]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="f9cd7221-09a1-43b2-a3aa-248c6c2da742" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="getFlowPost" doc:id="d24d92d9-694a-49ab-bcf2-94a022a985e4" >
+		<http:listener doc:name="Listener" doc:id="3f83cdec-6749-47e5-8540-d5da1cab5ee1" config-ref="HTTP_Listener_config" path="/medicine" allowedMethods="POST"/>
+		<set-payload value="value added (but not really)" doc:name="Set Payload" doc:id="750861f7-53c5-48ed-bf9f-c77a099189c0" />
+		<ee:transform doc:name="Transform Message" doc:id="82254284-3c0b-46f0-8cef-447724c61edc" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="getFlowByID" doc:id="ec0b5da9-ae28-4c01-8233-4737cb8a3e85" >
+		<http:listener doc:name="Listener" doc:id="991185aa-3f25-4f94-9050-a60a12ca0948" config-ref="HTTP_Listener_config" path="/medicine/{ID}" allowedMethods="GET">
+			<http:response >
+				<http:headers ><![CDATA[#[output application/java
+---
+{
+	"M_name" : payload.M_name[0]
+}]]]></http:headers>
+			</http:response>
+		</http:listener>
+		<db:select doc:name="Select" doc:id="5ca0cbbc-fc46-42f6-bb29-8290d7c9eecb" config-ref="Database_Config">
+			<db:sql ><![CDATA[select * from Medicines where M_id = :ID]]></db:sql>
+			<db:input-parameters ><![CDATA[#["ID": attributes.uriParams.ID]]]></db:input-parameters>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="2e5f6245-3d32-49c5-9622-f94a9d905a76" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

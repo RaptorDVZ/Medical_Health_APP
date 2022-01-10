@@ -1,0 +1,10 @@
+%dw 2.0
+
+type auto_ec0b5da9_ae28_4c01_8233_4737cb8a3e85_Output_Payload = {
+  M_Stock: Number, 
+  Manufacturer: String, 
+  M_id: Number, 
+  M_name: String, 
+  _?: Any
+}
+
