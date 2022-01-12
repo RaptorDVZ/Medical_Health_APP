@@ -1,0 +1,22 @@
+pipeline {
+  agent any
+  tools {
+    maven "Maven"
+    jdk "Java"
+   }
+   
+   stage {
+    stage('Checking Version')
+      steps {
+        bat 'mvn --version'
+        }
+       }
+       
+       stage('Building...'){
+       steps{
+       bat 'mvn package deploy -DmuleDeploy'
+       
+       }
+      }
+     }
+    }
